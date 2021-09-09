@@ -1,0 +1,154 @@
+<html>
+    <head>
+        <title>jeux</title>
+        <style>
+            html, body {margin: 0px; padding: 0px; width: 100%; height: 100%;}
+            body { background: url('fond.png'); background-size: cover; overflow: hidden; }
+        </style>
+     <script src="jeux.js" type="text/javascript"></script>
+    </head>
+
+    <body>
+
+<script type="text/javascript">
+var alien1 = new Sprite("alien9.png", 100, 50);
+var alien2 = new Sprite("alien2.png", 400, 50);
+var alien3 = new Sprite("alien3.png", 700, 50);
+var alien4 = new Sprite("alien4.png", 1000, 50);
+var alien5 = new Sprite("alien5.png", 1300, 50);
+
+var alien6 = new Sprite("alien9.png", 250, 150);
+var alien7 = new Sprite("alien2.png", 550, 150);
+var alien8 = new Sprite("alien3.png", 850, 150);
+var alien9 = new Sprite("alien4.png", 1150, 150);
+var alien10 = new Sprite("alien5.png", 1550, 150);
+
+var alien11 = new Sprite("alien9.png", 100, 250);
+var alien12 = new Sprite("alien2.png", 400, 250);
+var alien13 = new Sprite("alien3.png", 700, 250);
+var alien14 = new Sprite("alien4.png", 1000, 250);
+var alien15 = new Sprite("alien5.png", 1300, 250);
+
+var missile = new Sprite("misssile5.png", 0, 0);
+missile.display = "none";
+
+var vaisseau = new Sprite("vaisseau3.png", 740, 700);
+
+document.onkeydown = function(event) {
+    // console.log(event.keyCode);
+if( event.keyCode == 103 ) {
+   vaisseau.left -= 10;
+   vaisseau.top -= 10; 
+} else if( event.keyCode == 104 ) {
+    vaisseau.top -= 10; 
+ } else if( event.keyCode == 105 ) {
+    vaisseau.left += 10;
+    vaisseau.top -= 10; 
+ } else if( event.keyCode == 100 ) {
+    vaisseau.left -= 10; 
+ } else if( event.keyCode == 102 ) {
+    vaisseau.left += 10; 
+ } else if( event.keyCode == 97 ) {
+    vaisseau.left -= 10;
+    vaisseau.top += 10; 
+ } else if( event.keyCode == 98 ) {
+    vaisseau.top += 10;
+ } else if( event.keyCode == 99 ) {
+    vaisseau.left += 10;
+    vaisseau.top += 10; 
+ }
+
+ if( vaisseau.left < 0 ){
+    vaisseau.left = 0;
+ } 
+ if( vaisseau.left > document.body.clientWidth - vaisseau._node.width ) {
+    vaisseau.left = document.body.clientWidth - vaisseau._node.width;
+ }
+ if( vaisseau.top < 0 ){
+    vaisseau.top = 0;
+ } 
+ if( vaisseau.top > document.body.clientHeight - vaisseau._node.height ) {
+    vaisseau.top = document.body.clientHeight - vaisseau._node.height;
+ }
+ if( event.keyCode == 101 || event.keyCode == 32) {
+      deltaAudio.play();
+     if(missile.display == "none"){ 
+     missile.display = "block";
+     missile.left = vaisseau.left + (vaisseau._node.width - missile._node.width) / 2;
+     missile.top = vaisseau.top;
+     missile.startAnimation( moveMissile, 20 );
+     
+    }
+ }
+};
+
+function moveMissile( missile ) {
+    missile.top -=10;
+    if ( missile.top < -40 ) {
+        missile.stopAnimation();
+        missile.display = "none";
+    } 
+    for (var i=1; i<=15; i++) {
+        var alien = window["alien"+i];
+        if( alien.display == "none") continue;
+        if( missile.checkCollision(alien) ){
+          missile.stopAnimation();
+          missile.display = "none";
+          alien.stopAnimation(); 
+          alien.display = "none";
+          ExplosionsAudio.play();
+        }
+     
+    }
+
+}
+vaisseau.startAnimation(collisVaisseauAlien);
+function collisVaisseauAlien( vaisseau ) {
+   for (var i=1; i<=15; i++) {
+        var alien = window["alien"+i];
+   if(vaisseau.display == "none")
+   missile.stopAnimation();
+   // missile.display = "none";
+   if( vaisseau.display == "none") continue;
+   if( vaisseau.checkCollision(alien) ) {
+      vaisseau.display = "none";
+      alien.stopAnimation();
+      alien.display = "none";
+      ExplosionsAudio.play();
+
+      }
+}
+
+}
+
+
+
+function moveAlienToLeft( alien ) {
+    alien.left -= 3;
+
+    if ( alien.left <= 0 ){
+     alien.top += 50;
+     alien.startAnimation(moveAlienToRight, 20 );   
+    }
+}
+function moveAlienToRight( alien ) {
+    alien.left += 3;
+
+    if ( alien.left > document.body.clientWidth - alien._node.width ) {
+     alien.top += 50;
+     alien.startAnimation(moveAlienToLeft, 20 );   
+    }
+}
+for ( var i=1; i<=15; i++ ) {
+    window["alien"+i].startAnimation( moveAlienToRight, 20 );
+    
+}
+// alien1.startAnimation(moveAlienToRight, 20 );
+// alien2.startAnimation(moveAlienToRight, 20 );
+// alien3.startAnimation(moveAlienToRight, 20 );
+// alien4.startAnimation(moveAlienToRight, 20 );
+// alien5.startAnimation(moveAlienToRight, 20 ); 
+</script>
+
+</body>
+</html>
